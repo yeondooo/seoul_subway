@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:seoul_subway/domain/repository/station_respository.dart';
+import 'package:seoul_subway/core/result.dart';
+import 'package:seoul_subway/domain/use_case/get_station_info_use_case.dart';
 import 'package:seoul_subway/presentation/main/main_state.dart';
 
 class MainViewModel with ChangeNotifier {
-  final StationRepository _stationRepository;
+  final GetStationInfoUseCase _getStationInfoUseCase;
 
-  MainViewModel(this._stationRepository);
+  MainViewModel(this._getStationInfoUseCase);
 
   MainState _state = const MainState();
 
@@ -15,10 +16,17 @@ class MainViewModel with ChangeNotifier {
     _state = state.copyWith(isLoading: true);
     notifyListeners();
 
-    _state = state.copyWith(
-      stations: await _stationRepository.getArrivalInfo(query),
-      isLoading: false,
-    );
+    final result = await _getStationInfoUseCase.execute(query);
+
+    switch (result) {
+      case Success(:final data):
+        _state = state.copyWith(
+          stations: data,
+          isLoading: false,
+        );
+      case Error(:final e):
+        _state = state.copyWith(isLoading: false);
+    }
     notifyListeners();
   }
 }
