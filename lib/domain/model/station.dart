@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:flutter/foundation.dart';
 
 part 'station.g.dart';
 
@@ -13,6 +12,7 @@ class Station {
   final String arvlMsg3;
   final String arvlCd;
   final String btrainSttus;
+  final String barvlDt;
 
   Station({
     required this.updnLine,
@@ -23,6 +23,7 @@ class Station {
     required this.arvlMsg3,
     required this.arvlCd,
     required this.btrainSttus,
+    required this.barvlDt,
   });
 
   factory Station.fromJson(Map<String, dynamic> json) =>
